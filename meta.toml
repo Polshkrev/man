@@ -1,0 +1,21 @@
+[project]
+name = "man"
+author = "Polshkrev"
+description = "A linux man page reader."
+
+[project.version]
+minor = 1
+
+[license]
+type = "MIT"
+path = "LICENSE"
+
+[paths]
+readme = "README.md"
+
+[urls]
+repository = "https://github.com/Polshkrev/man"
+
+[commands]
+build = ["go", "build", "-o", "man.exe", "cmd\\man.go"]
+run = ["bin\\man.exe"]
