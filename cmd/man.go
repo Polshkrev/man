@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/gopolutils/collections"
 	"github.com/Polshkrev/gopolutils/fayl"
+	"github.com/Polshkrev/man"
 )
 
 const (
@@ -29,6 +31,7 @@ func getArgument(minimum, maximum uint8, args ...string) (string, *gopolutils.Ex
 
 func main() {
 	var name = gopolutils.Must(getArgument(minimumArgumentCount, maximumArgumentCount, os.Args...))
-	var files collections.View[*fayl.Path] = gopolutils.Must(GetFiles(documentationFolder))
-	var content []byte = gopolutils.Must(FindByTitle(files, name))
+	var files collections.View[*fayl.Path] = gopolutils.Must(man.GetFiles(documentationFolder))
+	var content []byte = gopolutils.Must(man.FindByTitle(files, name))
+	fmt.Println(string(content))
 }
