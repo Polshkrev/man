@@ -17,5 +17,5 @@ readme = "README.md"
 repository = "https://github.com/Polshkrev/man"
 
 [commands]
-build = ["go", "build", "-o", "man.exe", "cmd\\man.go"]
+build = ["go", "build", "-o", "bin\\man.exe", "cmd\\man.go"]
 run = ["bin\\man.exe"]
