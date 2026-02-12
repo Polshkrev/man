@@ -25,8 +25,9 @@ func normalizeTitle(title, token string) (string, *gopolutils.Exception) {
 
 // Concurrently search a view of [fayl.Path] based on a given name.
 func concurrentSearch(files collections.View[*fayl.Path], name string, resultChannel chan<- []byte, errorChannel chan<- *gopolutils.Exception) {
-	var file *fayl.Path
-	for _, file = range files.Collect() {
+	var i int
+	for i = range files.Collect() {
+		var file *fayl.Path = files.Collect()[i]
 		var title string
 		var normalizeException *gopolutils.Exception
 		title, normalizeException = normalizeTitle(file.ToString(), "(")

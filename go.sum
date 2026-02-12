@@ -1,9 +1,9 @@
 github.com/BurntSushi/toml v1.4.0 h1:kuoIxZQy2WRRk1pttg9asf+WVv6tWQuBNVmK8+nqPr0=
 github.com/BurntSushi/toml v1.4.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
-github.com/Polshkrev/gopolutils v1.21.0 h1:McIdIoQ2AZrcp/U1TH1INTth2D+1qABlLn1P801Nd30=
-github.com/Polshkrev/gopolutils v1.21.0/go.mod h1:iuYJBck5YmeosZ8j3Oral3Nxym6t213JbKoSNbRXS/s=
-github.com/Polshkrev/goserialize v0.5.0 h1:x/LVlA6yZlA2RhSLZ0gsc2HCW6TpYMzgyW22V7ECosE=
-github.com/Polshkrev/goserialize v0.5.0/go.mod h1:iuwdd6B73uDulbi6Qz5AH6PwDdlts5Ivh8HJfT/jDYY=
+github.com/Polshkrev/gopolutils v1.25.0 h1:gxeKphmq/XGQ18jsJ9J2on59xmuUKVIL7IW9ZQgs7WA=
+github.com/Polshkrev/gopolutils v1.25.0/go.mod h1:DOft1lCtrCN47ZcKtpoaf7RlxE7bKyw7uxUy2qTKT2A=
+github.com/Polshkrev/goserialize v0.9.0 h1:PO+lJK1Xl87Ex5Iw51aaXudouYMkHdBYpKmiJkN4nhE=
+github.com/Polshkrev/goserialize v0.9.0/go.mod h1:Re27ZCs4+5NVSGEbcr4xdl3yyNmerVOGkQ+rjpRWImk=
 github.com/trimmer-io/go-csv v1.0.0 h1:s1HhtyBDykRk//Nif5zrhLkBaCKNIizYWORnB8C7esE=
 github.com/trimmer-io/go-csv v1.0.0/go.mod h1:aRhJbR1bXkNiOSXpIsD9XIxBrHFELN0QvTmiphlW3P0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=

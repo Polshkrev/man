@@ -7,6 +7,7 @@ import (
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/gopolutils/collections"
+	"github.com/Polshkrev/gopolutils/collections/safe"
 	"github.com/Polshkrev/gopolutils/fayl"
 )
 
@@ -14,7 +15,7 @@ import (
 // Returns a [collections.View] of [fayl.Path] containing all the files of the given directory.
 // If the given directory is empty, an [gopolutils.IOError] is returned with a nil data pointer.
 func GetFiles(folder string) (collections.View[*fayl.Path], *gopolutils.Exception) {
-	var result collections.Collection[*fayl.Path] = collections.NewSafeArray[*fayl.Path]()
+	var result safe.Collection[*fayl.Path] = safe.NewArray[*fayl.Path]()
 	var root *fayl.Path = getRoot()
 	var directory *fayl.Path = findFolder(root, folder)
 	var folders collections.View[*fayl.Path]
@@ -23,8 +24,9 @@ func GetFiles(folder string) (collections.View[*fayl.Path], *gopolutils.Exceptio
 	if except != nil {
 		return nil, except
 	}
-	var file *fayl.Path
-	for _, file = range folders.Collect() {
+	var i int
+	for i = range folders.Collect() {
+		var file *fayl.Path = folders.Collect()[i]
 		var view collections.View[*fayl.Path]
 		view, except = directoryAsView(file)
 		if except != nil {
@@ -33,7 +35,7 @@ func GetFiles(folder string) (collections.View[*fayl.Path], *gopolutils.Exceptio
 		result.Extend(view)
 	}
 	if result.IsEmpty() {
-		return nil, gopolutils.NewException(fmt.Sprintf("Directory '%s' seems to be empty.", file.ToString()))
+		return nil, gopolutils.NewException(fmt.Sprintf("Directory '%s' seems to be empty.", folder))
 	}
 	return result, nil
 }
@@ -55,9 +57,10 @@ func appendRoot(destination *fayl.Path, child string) *fayl.Path {
 // Convert a collection of [os.DirEntry] into a collection of [fayl.Path].
 // Returns a collection of [fayl.Path] containing the names of the given [os.DirEntry]
 func entriesAsPaths(root *fayl.Path, entries []os.DirEntry) collections.View[*fayl.Path] {
-	var result collections.Collection[*fayl.Path] = collections.NewSafeArray[*fayl.Path]()
-	var file os.DirEntry
-	for _, file = range entries {
+	var result safe.Collection[*fayl.Path] = safe.NewArray[*fayl.Path]()
+	var i int
+	for i = range entries {
+		var file os.DirEntry = entries[i]
 		var absolute *fayl.Path = gopolutils.Must(root.Absolute())
 		result.Append(fayl.PathFrom(filepath.Join(absolute.ToString(), file.Name())))
 	}
