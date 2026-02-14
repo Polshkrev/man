@@ -2,10 +2,15 @@ package man
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/goserialize"
 )
+
+func normalizeNeedle(needle string) string {
+	return strings.ToLower(strings.TrimSpace(needle))
+}
 
 // Concurrently seach for a need in an [goserialize.Object] haystack.
 func concurrentSearch(needle string, haystack goserialize.Object, resultChannel chan<- string, errorChannel chan<- *gopolutils.Exception) {
@@ -13,7 +18,7 @@ func concurrentSearch(needle string, haystack goserialize.Object, resultChannel 
 	defer close(errorChannel)
 	var value any
 	var ok bool
-	value, ok = haystack[needle]
+	value, ok = haystack[normalizeNeedle(needle)]
 	if !ok {
 		resultChannel <- ""
 		errorChannel <- gopolutils.NewNamedException(gopolutils.KeyError, fmt.Sprintf("Can not find '%s' in mapping.", needle))
