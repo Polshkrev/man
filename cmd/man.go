@@ -41,7 +41,7 @@ func readFiles(read bool, documentationFolder, manualsFolder string, result *gos
 		return
 	}
 	var root *fayl.Path = getRoot()
-	(*result) = man.ReadFiles(root, documentationFolder, manualsFolder)
+	(*result) = gopolutils.Must(man.ReadFiles(root, documentationFolder, manualsFolder))
 }
 
 // Write given content to a given path based on a sentinal boolean flag.
@@ -66,7 +66,7 @@ func main() {
 	var data goserialize.Object
 	readFiles(*read, documentationFolder, manualsFolder, &data)
 	writeFiles(*write, targetPath, &data)
-	var results *goserialize.Object = gopolutils.Must(fayl.ReadObject(targetPath))
+	var results *goserialize.Object = gopolutils.Must(fayl.ReadObject[goserialize.Object](targetPath))
 	var name string = gopolutils.Must(getArgument(1, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var content string = gopolutils.Must(man.FindByTitle(*results, name))
 	fmt.Println(content)
