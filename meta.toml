@@ -5,6 +5,7 @@ description = "A linux man page reader."
 
 [project.version]
 minor = 2
+patch = 1
 
 [license]
 type = "MIT"
