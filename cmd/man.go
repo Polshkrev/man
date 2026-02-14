@@ -13,8 +13,8 @@ import (
 const (
 	documentationFolder  string = "documentation"
 	manualsFolder        string = "man"
-	minimumArgumentCount uint8  = 2
-	maximumArgumentCount uint8  = 3
+	minimumArgumentCount uint8  = 1
+	maximumArgumentCount uint8  = 2
 )
 
 func getRoot() *fayl.Path {
@@ -62,12 +62,13 @@ func main() {
 	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", "./data/pages.json", "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	flag.Parse()
+	fmt.Println(len(flag.Args()))
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data goserialize.Object
 	readFiles(*read, documentationFolder, manualsFolder, &data)
 	writeFiles(*write, targetPath, &data)
 	var results *goserialize.Object = gopolutils.Must(fayl.ReadObject[goserialize.Object](targetPath))
-	var name string = gopolutils.Must(getArgument(1, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
+	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var content string = gopolutils.Must(man.FindByTitle(*results, name))
 	fmt.Println(content)
 }
