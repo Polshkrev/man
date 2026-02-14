@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"path/filepath"
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/gopolutils/fayl"
@@ -12,6 +13,7 @@ import (
 
 const (
 	documentationFolder  string = "documentation"
+	targetFile           string = "pages"
 	manualsFolder        string = "man"
 	minimumArgumentCount uint8  = 1
 	maximumArgumentCount uint8  = 2
@@ -57,12 +59,29 @@ func writeFiles(write bool, target *fayl.Path, content *goserialize.Object) {
 	}
 }
 
+func appendRoot(root *fayl.Path, child string) string {
+	return filepath.Join(root.ToString(), string(filepath.Separator), child)
+}
+
+// func If[TrueValue, FalseValue any](condition bool, trueValue TrueValue, falseValue FalseValue) {
+// 	if !condition {
+// 		return falseValue
+// 	}
+// 	return trueValue
+// }
+
+func getTargetFile(name string, fileType fayl.Suffix) string {
+	var root *fayl.Path = getRoot()
+	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
+	var manualsPath *fayl.Path = fayl.PathFrom(appendRoot(documentationPath, manualsFolder))
+	return appendRoot(manualsPath, fayl.PathFromParts(manualsPath, name, fileType).ToString())
+}
+
 func main() {
 	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file.")
 	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
-	var target *string = flag.String("o", "./data/pages.json", "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
+	var target *string = flag.String("o", getTargetFile("pages", fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	flag.Parse()
-	fmt.Println(len(flag.Args()))
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data goserialize.Object
 	readFiles(*read, documentationFolder, manualsFolder, &data)
