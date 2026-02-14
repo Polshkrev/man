@@ -22,6 +22,7 @@ func concurrentSearch(needle string, haystack goserialize.Object, resultChannel 
 	if !ok {
 		resultChannel <- ""
 		errorChannel <- gopolutils.NewNamedException(gopolutils.KeyError, fmt.Sprintf("Can not find '%s' in mapping.", needle))
+		return
 	}
 	resultChannel <- value.(string)
 	errorChannel <- nil
