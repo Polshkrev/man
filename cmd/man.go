@@ -66,8 +66,8 @@ func main() {
 	var data goserialize.Object
 	readFiles(*read, documentationFolder, manualsFolder, &data)
 	writeFiles(*write, targetPath, &data)
-	var results *goserialize.Object = fayl.ReadObject(targetPath)
+	var results *goserialize.Object = gopolutils.Must(fayl.ReadObject(targetPath))
 	var name string = gopolutils.Must(getArgument(1, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
-	var content string = gopolutils.Must(man.FindByTitle(results, name))
+	var content string = gopolutils.Must(man.FindByTitle(*results, name))
 	fmt.Println(content)
 }
