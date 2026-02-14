@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/Polshkrev/gopolutils"
@@ -81,13 +82,18 @@ func main() {
 	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file.")
 	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", getTargetFile("pages", fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
+	var size *bool = flag.Bool("n", false, "Obtain the total amount of pages.")
 	flag.Parse()
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
-	var data goserialize.Object
-	readFiles(*read, documentationFolder, manualsFolder, &data)
-	writeFiles(*write, targetPath, &data)
-	var results *goserialize.Object = gopolutils.Must(fayl.ReadObject[goserialize.Object](targetPath))
+	var data *goserialize.Object
+	readFiles(*read, documentationFolder, manualsFolder, data)
+	writeFiles(*write, targetPath, data)
+	data = gopolutils.Must(fayl.ReadObject[goserialize.Object](targetPath))
+	if *size {
+		fmt.Println(len(data))
+		os.Exit(0)
+	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
-	var content string = gopolutils.Must(man.FindByTitle(*results, name))
-	fmt.Print(content)
+	var content string = gopolutils.Must(man.FindByTitle(*data, name))
+	fmt.Println(content)
 }
