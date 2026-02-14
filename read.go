@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/gopolutils/collections"
@@ -12,41 +13,27 @@ import (
 	"github.com/Polshkrev/goserialize"
 )
 
-// Obtain all the files in a given folder.
-// Returns a [collections.View] of [fayl.Path] containing all the files of the given directory.
-// If the given directory is empty, an [gopolutils.IOError] is returned with a nil data pointer.
-// func GetFiles(folder string) (collections.View[*fayl.Path], *gopolutils.Exception) {
-// 	var result safe.Collection[*fayl.Path] = safe.NewArray[*fayl.Path]()
-// 	var root *fayl.Path = getRoot()
-// 	var directory *fayl.Path = findFolder(root, folder)
-// 	var folders collections.View[*fayl.Path]
-// 	var except *gopolutils.Exception
-// 	folders, except = directoryAsView(directory)
-// 	if except != nil {
-// 		return nil, except
-// 	}
-// 	var i int
-// 	for i = range folders.Collect() {
-// 		var file *fayl.Path = folders.Collect()[i]
-// 		var view collections.View[*fayl.Path]
-// 		view, except = directoryAsView(file)
-// 		if except != nil {
-// 			return nil, except
-// 		}
-// 		result.Extend(view)
-// 	}
-// 	if result.IsEmpty() {
-// 		return nil, gopolutils.NewException(fmt.Sprintf("Directory '%s' seems to be empty.", folder))
-// 	}
-// 	return result, nil
-// }
-
-// Obtain the root of the filesystem.
-// Returns the root of the current directory.
-// func getRoot() *fayl.Path {
-// 	var current *fayl.Path = fayl.NewPath()
-// 	return gopolutils.Must(current.Root())
-// }
+// Read the files of a given root path concatenated with the given documentation folder and manuals folder.
+// Returns a [goserialize.Object] of names mapped to their file content.
+// If the absolute path of the file can not be obtained, or the file can not be read, an [gopolutils.IOError] is returned with a nil data pointer.
+// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+// If the key is already in the result object, a [gopolutils.KeyError] is returned with a nil data pointer.
+func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string) (goserialize.Object, *gopolutils.Exception) {
+	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
+	var manualsPath *fayl.Path = findFolder(documentationPath, manualsFolder)
+	var names collections.View[string]
+	var except *gopolutils.Exception
+	names, except = getNames(manualsPath)
+	if except != nil {
+		return nil, except
+	}
+	var result goserialize.Object
+	result, except = namesToObjects(names, manualsPath)
+	if except != nil {
+		return nil, except
+	}
+	return result, nil
+}
 
 // Make a directory if it doesn't exist on the filesystem.
 // If the directory can not be created, an [gopolutils.IOError] is returned, else nil is returned.
@@ -141,6 +128,20 @@ func getContent(parentFolder *fayl.Path, name string) (string, *gopolutils.Excep
 	return string(content), nil
 }
 
+// Normalize the given title.
+// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name of the title is returned with a nil exception pointer.
+func normalizeTitle(title, token string) (string, *gopolutils.Exception) {
+	var lower string = strings.ToLower(title)
+	var strip string
+	var after string
+	var found bool
+	strip, after, found = strings.Cut(lower, token)
+	if !found {
+		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, lower, strip, after, found))
+	}
+	return strip, nil
+}
+
 // Convert a given [gopolutils.View] of file names into a [goserialize.Object].
 // Returns a [goserialize.Object] of filenames mapped to their content based on a given [collections.View] of names.
 // If the absolute path of the file can not be obtained, or the file can not be read, an [gopolutils.IOError] is returned with a nil data pointer.
@@ -168,26 +169,4 @@ func namesToObjects(names collections.View[string], parentPath *fayl.Path) (gose
 		}
 	}
 	return packedPage, nil
-}
-
-// Read the files of a given root path concatenated with the given documentation folder and manuals folder.
-// Returns a [goserialize.Object] of names mapped to their file content.
-// If the absolute path of the file can not be obtained, or the file can not be read, an [gopolutils.IOError] is returned with a nil data pointer.
-// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
-// If the key is already in the result object, a [gopolutils.KeyError] is returned with a nil data pointer.
-func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string) (goserialize.Object, *gopolutils.Exception) {
-	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
-	var manualsPath *fayl.Path = findFolder(documentationPath, manualsFolder)
-	var names collections.View[string]
-	var except *gopolutils.Exception
-	names, except = getNames(manualsPath)
-	if except != nil {
-		return nil, except
-	}
-	var result goserialize.Object
-	result, except = namesToObjects(names, manualsPath)
-	if except != nil {
-		return nil, except
-	}
-	return result, nil
 }
