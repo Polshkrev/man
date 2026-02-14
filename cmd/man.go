@@ -74,7 +74,7 @@ func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
 	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
 	var manualsPath *fayl.Path = fayl.PathFrom(appendRoot(documentationPath, manualsFolder))
-	return appendRoot(manualsPath, fayl.PathFromParts(manualsPath.ToString(), name, fileType).ToString())
+	return fayl.PathFromParts(manualsPath.ToString(), name, fileType).ToString()
 }
 
 func main() {
