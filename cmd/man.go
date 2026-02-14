@@ -90,7 +90,7 @@ func main() {
 	writeFiles(*write, targetPath, data)
 	data = gopolutils.Must(fayl.ReadObject[goserialize.Object](targetPath))
 	if *size {
-		fmt.Println(len(data))
+		fmt.Println(len(*data))
 		os.Exit(0)
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
