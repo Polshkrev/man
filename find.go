@@ -9,11 +9,13 @@ import (
 	"github.com/Polshkrev/gopolutils/collections/safe"
 )
 
+// Normalize a given needle.
+// Returns a lowered and space trimmed string.
 func normalizeNeedle(needle string) string {
 	return strings.ToLower(strings.TrimSpace(needle))
 }
 
-// Concurrently seach for a need in an [goserialize.Object] haystack.
+// Concurrently seach for a name in an [collections.View] haystack.
 func concurrentNameSearch(name string, pages collections.View[Page], resultChannel chan<- Page, errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -31,7 +33,7 @@ func concurrentNameSearch(name string, pages collections.View[Page], resultChann
 	errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find page with name '%s'.", name))
 }
 
-// Concurrently seach for a need in an [goserialize.Object] haystack.
+// Concurrently seach for a section in an [collections.View] haystack.
 func concurrentSectionSearch(section Section, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -53,9 +55,9 @@ func concurrentSectionSearch(section Section, pages collections.View[Page], resu
 	errorChannel <- nil
 }
 
-// Find a given name in an [goserialize.Object].
-// Returns the contents of the file with the given name.
-// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+// Find a given name in a [collections.View] of [Page].
+// Returns the [Page] containing the given name.
+// If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
 func FindByName(entries collections.View[Page], name string) (Page, *gopolutils.Exception) {
 	var resultChannel chan Page = make(chan Page, 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
@@ -65,9 +67,9 @@ func FindByName(entries collections.View[Page], name string) (Page, *gopolutils.
 	return result, except
 }
 
-// Find a given name in an [goserialize.Object].
-// Returns the contents of the file with the given name.
-// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+// Find a given section in a [collections.View] of [Page].
+// Returns a [collections.View] of [Page] containing the given [Section].
+// If the given section can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
 func FindBySection(entries collections.View[Page], section Section) (collections.View[Page], *gopolutils.Exception) {
 	var resultChannel chan collections.View[Page] = make(chan collections.View[Page], 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
@@ -77,6 +79,9 @@ func FindBySection(entries collections.View[Page], section Section) (collections
 	return result, except
 }
 
+// Find a [Page] based on its name from a [collections.View] of [Section].
+// If the given section can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
+// If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
 func FindByNameFromSection(entries collections.View[Page], name string, section Section) (Page, *gopolutils.Exception) {
 	var sections collections.View[Page]
 	var except *gopolutils.Exception

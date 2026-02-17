@@ -6,7 +6,7 @@ import "github.com/Polshkrev/gopolutils"
 type Section = gopolutils.StringEnum
 
 const (
-	None                   Section = ""
+	None                   Section = ""       // Describes a catch-all section.
 	Header                 Section = "0p"     // Describes header files within the POSIX standard.
 	Command                Section = "1"      // Describes user commands.
 	PosixCommand           Section = "1p"     // Describes user commands within the POSIX standard.

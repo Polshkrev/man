@@ -12,6 +12,7 @@ import (
 	"github.com/Polshkrev/gopolutils/fayl"
 )
 
+// Concurrently obtain the entries of a given folder.
 func getConcurrentEntries(folder string, resultChannel chan<- []os.DirEntry, errorChannel chan<- error) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -22,6 +23,9 @@ func getConcurrentEntries(folder string, resultChannel chan<- []os.DirEntry, err
 	resultChannel <- entries
 }
 
+// Obtain the entries of a given folder.
+// Returns a slice of [os.DirEntry].
+// If the entries can not be obtained, an [gopolutils.IOError] is returned with a nil data pointer.
 func getEntries(folder string) ([]os.DirEntry, *gopolutils.Exception) {
 	var resultChannel chan []os.DirEntry = make(chan []os.DirEntry, 1)
 	var errorChannel chan error = make(chan error, 1)
@@ -34,8 +38,8 @@ func getEntries(folder string) ([]os.DirEntry, *gopolutils.Exception) {
 	return result, nil
 }
 
-// Normalize the given title.
-// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name of the title is returned with a nil exception pointer.
+// Cut the base from the given file name.
+// If the given base can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name of the title is returned with a nil exception pointer.
 func cutNameFromFile(filename, token string) (string, *gopolutils.Exception) {
 	var lower string = strings.ToLower(filename)
 	var strip string
@@ -55,7 +59,9 @@ func appendRoot(root *fayl.Path, child string) string {
 	return filepath.Join(root.ToString(), string(filepath.Separator), child)
 }
 
-func entriesToPaths(folder *fayl.Path) collections.View[*fayl.Path] {
+// Obtain the paths of a given folder path.
+// Returns a [collections.View] of [fayl.Path] based on the files contained within the given folder.
+func getPaths(folder *fayl.Path) collections.View[*fayl.Path] {
 	var result safe.Collection[*fayl.Path] = safe.NewArray[*fayl.Path]()
 	var entries []os.DirEntry = gopolutils.Must(getEntries(folder.ToString()))
 	var i int
@@ -66,6 +72,8 @@ func entriesToPaths(folder *fayl.Path) collections.View[*fayl.Path] {
 	return result
 }
 
+// Convert a given [collections.View] of [fayl.Path] into a [collections.View] of [Page].
+// Returns a [collections.View] of [Page] based on a given [collections.View] of [fayl.Path].
 func pathsToPages(paths collections.View[*fayl.Path]) collections.View[Page] {
 	var result safe.Collection[Page] = safe.NewArray[Page]()
 	var i int
@@ -102,14 +110,11 @@ func findFolder(root *fayl.Path, child string) *fayl.Path {
 }
 
 // Read the files of a given root path concatenated with the given documentation folder and manuals folder.
-// Returns a [goserialize.Object] of names mapped to their file content.
-// If the absolute path of the file can not be obtained, or the file can not be read, an [gopolutils.IOError] is returned with a nil data pointer.
-// If the given title can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
-// If the key is already in the result object, a [gopolutils.KeyError] is returned with a nil data pointer.
+// Returns a [collections.View] of [Page] based on a [fayl.Path] constructed from its given parts.
 func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string) collections.View[Page] {
 	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
 	var manualsPath *fayl.Path = findFolder(documentationPath, manualsFolder)
-	var paths collections.View[*fayl.Path] = entriesToPaths(manualsPath)
+	var paths collections.View[*fayl.Path] = getPaths(manualsPath)
 	var pages collections.View[Page] = pathsToPages(paths)
 	return pages
 }
