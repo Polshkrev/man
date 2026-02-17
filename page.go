@@ -39,22 +39,25 @@ func normalizeSection(name, token string) (string, *gopolutils.Exception) {
 	return after, nil
 }
 
+// Normalize the given name.
+// If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name cut from after the given token is returned with a nil exception pointer.
+func normalizeName(name, token string) (string, *gopolutils.Exception) {
+	var strip string
+	var after string
+	var found bool
+	strip, after, found = strings.Cut(name, token)
+	if !found {
+		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, name, strip, after, found))
+	}
+	return strip, nil
+}
+
 // Cut the name of the file from its given [fayl.Path].
 // Returns the name of the file cut from its given path.
 // If the given path can not be cut, a [gopolutils.ValueError] is returned with an empty string.
 func getNameFromPath(file *fayl.Path) (string, *gopolutils.Exception) {
-	var after string
-	var found bool
-	after, found = strings.CutPrefix(file.ToString(), string(filepath.Separator))
-	if !found {
-		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; After %s, Found %t.", string(filepath.Separator), file.ToString(), after, found))
-	}
-	var strip string
-	strip, found = strings.CutSuffix(file.ToString(), "(")
-	if !found {
-		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; Before %s, Found %t.", "(", file.ToString(), strip, found))
-	}
-	return strip, nil
+	var name string = filepath.Base(file.ToString())
+	return normalizeName(name, "(")
 }
 
 // Obtain the string of the section from the given filename.
