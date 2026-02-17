@@ -21,6 +21,8 @@ const (
 	maximumArgumentCount uint8  = 2
 )
 
+// Obtain the root of the file system.
+// Returns a [fayl.Path] of the root of the file system.
 func getRoot() *fayl.Path {
 	var current *fayl.Path = fayl.NewPath()
 	return gopolutils.Must(current.Root())
