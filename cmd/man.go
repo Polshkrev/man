@@ -45,7 +45,7 @@ func readFiles(read bool, documentationFolder, manualsFolder string, result *col
 		return
 	}
 	var root *fayl.Path = getRoot()
-	(*result) = gopolutils.Must(man.ReadFiles(root, documentationFolder, manualsFolder))
+	(*result) = man.ReadFiles(root, documentationFolder, manualsFolder)
 }
 
 // Write given content to a given path based on a sentinal boolean flag.
@@ -74,7 +74,7 @@ func getTargetFile(name string, fileType fayl.Suffix) string {
 
 func find(name string, section man.Section, entries collections.View[man.Page]) man.Page {
 	if section == man.None {
-		return gopolutils.Must(man.FindByTitle(entries, name))
+		return gopolutils.Must(man.FindByName(entries, name))
 	}
 	return gopolutils.Must(man.FindByNameFromSection(entries, name, section))
 }
@@ -92,7 +92,7 @@ func main() {
 	writeFiles(*write, targetPath, data)
 	data = gopolutils.Must(fayl.ReadList[man.Page](targetPath))
 	if *size {
-		fmt.Println(len(*data))
+		fmt.Println(data.Size())
 		os.Exit(0)
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
