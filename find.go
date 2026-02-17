@@ -84,5 +84,5 @@ func FindByNameFromSection(entries collections.View[Page], name string, section 
 	if except != nil {
 		return *NewPage("", None, ""), except
 	}
-	return FindByTitle(sections, name)
+	return FindByName(sections, name)
 }
