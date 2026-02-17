@@ -61,10 +61,14 @@ func writeFiles(write bool, target *fayl.Path, content collections.View[man.Page
 	}
 }
 
+// Append a given parent to its given child.
+// Returns a filepath string constructed of a parent and child path.
 func appendRoot(root *fayl.Path, child string) string {
 	return filepath.Join(root.ToString(), string(filepath.Separator), child)
 }
 
+// Construct the target file based on its name and file type.
+// Retuns a the constructed target file based on its given name and file type.
 func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
 	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
@@ -72,6 +76,8 @@ func getTargetFile(name string, fileType fayl.Suffix) string {
 	return fayl.PathFromParts(manualsPath.ToString(), name, fileType).ToString()
 }
 
+// Find a [man.Page] from a [collections.View] based on either its given section or its given name.
+// Returns a [man.Page] containing the given name or given section.
 func find(name string, section man.Section, entries collections.View[man.Page]) man.Page {
 	if section == man.None {
 		return gopolutils.Must(man.FindByName(entries, name))
@@ -82,7 +88,7 @@ func find(name string, section man.Section, entries collections.View[man.Page]) 
 func main() {
 	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file.")
 	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
-	var target *string = flag.String("o", getTargetFile("pages", fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
+	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
 	var section *string = flag.String("s", man.None, "Specify the section from which to lookup.")
 	flag.Parse()
@@ -92,7 +98,7 @@ func main() {
 	writeFiles(*write, targetPath, data)
 	data = gopolutils.Must(fayl.ReadList[man.Page](targetPath))
 	if *size {
-		fmt.Println(data.Size())
+		fmt.Print(data.Size())
 		os.Exit(0)
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
