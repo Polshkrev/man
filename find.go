@@ -15,7 +15,7 @@ func normalizeNeedle(needle string) string {
 	return strings.ToLower(strings.TrimSpace(needle))
 }
 
-// Concurrently seach for a name in an [collections.View] haystack.
+// Concurrently seach for a name needle in an [collections.View] haystack.
 func concurrentNameSearch(name string, pages collections.View[Page], resultChannel chan<- Page, errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -33,7 +33,29 @@ func concurrentNameSearch(name string, pages collections.View[Page], resultChann
 	errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find page with name '%s'.", name))
 }
 
-// Concurrently seach for a section in an [collections.View] haystack.
+// Concurrently seach for a name needle in an [collections.View] haystack.
+func concurrentNamesSearch(name string, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
+	defer close(resultChannel)
+	defer close(errorChannel)
+	var result safe.Collection[Page] = safe.NewArray[Page]()
+	var i int
+	for i = range pages.Collect() {
+		var page Page = pages.Collect()[i]
+		if normalizeNeedle(name) != normalizeNeedle(page.Name) {
+			continue
+		}
+		result.Append(page)
+	}
+	if result.IsEmpty() {
+		resultChannel <- nil
+		errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find pages with name '%s'.", name))
+		return
+	}
+	resultChannel <- result
+	errorChannel <- nil
+}
+
+// Concurrently seach for a section needle in an [collections.View] haystack.
 func concurrentSectionSearch(section Section, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -90,4 +112,16 @@ func FindByNameFromSection(entries collections.View[Page], name string, section 
 		return *NewPage("", None, ""), except
 	}
 	return FindByName(sections, name)
+}
+
+// Find all [Page] of a given name.
+// Returns a [collections.View] of [Page] containing the given name.
+// If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+func FindAllNames(entries collections.View[Page], name string) (collections.View[Page], *gopolutils.Exception) {
+	var resultChannel chan collections.View[Page] = make(chan collections.View[Page], 1)
+	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
+	go concurrentSectionSearch(name, entries, resultChannel, exceptChannel)
+	var result collections.View[Page] = <-resultChannel
+	var except *gopolutils.Exception = <-exceptChannel
+	return result, except
 }
