@@ -107,7 +107,7 @@ func main() {
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	if len(*all) != 0 {
-		var pages collections.View[man.Page] = man.FindAllNames(data, *all)
+		var pages collections.View[man.Page] = gopolutils.Must(man.FindAllNames(data, *all))
 		var buffer *strings.Builder = &strings.Builder{}
 		var i int
 		for i = range pages.Collect() {
