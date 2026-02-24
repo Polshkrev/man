@@ -120,7 +120,7 @@ func FindByNameFromSection(entries collections.View[Page], name string, section 
 func FindAllNames(entries collections.View[Page], name string) (collections.View[Page], *gopolutils.Exception) {
 	var resultChannel chan collections.View[Page] = make(chan collections.View[Page], 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
-	go concurrentSectionSearch(name, entries, resultChannel, exceptChannel)
+	go concurrentNamesSearch(name, entries, resultChannel, exceptChannel)
 	var result collections.View[Page] = <-resultChannel
 	var except *gopolutils.Exception = <-exceptChannel
 	return result, except
