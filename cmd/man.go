@@ -105,7 +105,6 @@ func main() {
 		fmt.Print(data.Size())
 		os.Exit(0)
 	}
-	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	if len(*all) != 0 {
 		var pages collections.View[man.Page] = gopolutils.Must(man.FindAllNames(data, *all))
 		var buffer *strings.Builder = &strings.Builder{}
@@ -118,6 +117,7 @@ func main() {
 		fmt.Println(buffer.String())
 		os.Exit(0)
 	}
+	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var page man.Page = find(name, man.Section(*section), data)
 	fmt.Print(page.Content)
 }
