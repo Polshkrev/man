@@ -4,8 +4,7 @@ author = "Polshkrev"
 description = "A linux man page reader."
 
 [project.version]
-minor = 2
-patch = 2
+minor = 3
 
 [license]
 type = "MIT"
