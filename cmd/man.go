@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/Polshkrev/gopolutils"
 	"github.com/Polshkrev/gopolutils/collections"
@@ -93,6 +94,7 @@ func main() {
 	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
 	var section *string = flag.String("s", man.None, "Specify the section from which to lookup.")
+	var all *string = flag.String("a", "", "Display all sections that contain the specified page name.")
 	flag.Parse()
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data collections.View[man.Page] = safe.NewArray[man.Page]()
@@ -104,6 +106,18 @@ func main() {
 		os.Exit(0)
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
+	if len(*all) != 0 {
+		var pages collections.View[man.Page] = man.FindAllNames(data, *all)
+		var buffer *strings.Builder = &strings.Builder{}
+		var i int
+		for i = range pages.Collect() {
+			var page man.Page = pages.Collect()[i]
+			buffer.WriteString(page.Section)
+			buffer.WriteString(" ")
+		}
+		fmt.Println(buffer.String())
+		os.Exit(0)
+	}
 	var page man.Page = find(name, man.Section(*section), data)
 	fmt.Print(page.Content)
 }
