@@ -43,12 +43,12 @@ func getArgument(index, minimum, maximum uint8, args ...string) (string, *gopolu
 }
 
 // Read content into a result parametre from a given path constructed from its root and two isometric children based on a sentinal boolean flag.
-func readFiles(read bool, documentationFolder, manualsFolder string, result *collections.View[man.Page]) {
+func readFiles(read bool, documentationFolder, manualsFolder string, targetFile *fayl.Path, result *collections.View[man.Page]) {
 	if !read {
 		return
 	}
 	var root *fayl.Path = getRoot()
-	(*result) = man.ReadFiles(root, documentationFolder, manualsFolder)
+	(*result) = man.ReadFiles(root, documentationFolder, manualsFolder, targetFile)
 }
 
 // Write given content to a given path based on a sentinal boolean flag.
@@ -89,7 +89,7 @@ func find(name string, section man.Section, entries collections.View[man.Page]) 
 }
 
 func main() {
-	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file.")
+	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file. This will only matter if the 'read' flag is set.")
 	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
@@ -98,7 +98,7 @@ func main() {
 	flag.Parse()
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data collections.View[man.Page] = safe.NewArray[man.Page]()
-	readFiles(*read, documentationFolder, manualsFolder, &data)
+	readFiles(*read, documentationFolder, manualsFolder, targetPath, &data)
 	writeFiles(*write, targetPath, data)
 	data = gopolutils.Must(fayl.ReadList[man.Page](targetPath))
 	if *size {
