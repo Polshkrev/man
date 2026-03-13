@@ -1,10 +1,10 @@
 [project]
 name = "man"
-author = "Polshkrev"
+author = {name = "Polshkrev"}
 description = "A linux man page reader."
 
 [project.version]
-minor = 3
+minor = 4
 
 [license]
 type = "MIT"
