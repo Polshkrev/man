@@ -35,12 +35,14 @@ func appendRoot(root *fayl.Path, child string) string {
 
 // Convert a given [collections.View] of [fayl.Path] into a [collections.View] of [Page].
 // Returns a [collections.View] of [Page] based on a given [collections.View] of [fayl.Path].
-func pathsToPages(entries collections.View[*fayl.Entry]) collections.View[Page] {
+func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) collections.View[Page] {
 	var result safe.Collection[Page] = safe.NewArray[Page]()
 	var i int
 	for i = range entries.Collect() {
 		var entry *fayl.Entry = entries.Collect()[i]
 		if entry.Is(fayl.DirectoryType) {
+			continue
+		} else if strings.Compare(entry.Path().ToString(), targetFile.ToString()) == 0 {
 			continue
 		}
 		var path *fayl.Path = entry.Path()
@@ -51,7 +53,7 @@ func pathsToPages(entries collections.View[*fayl.Entry]) collections.View[Page] 
 
 // Read the files of a given root path concatenated with the given documentation folder and manuals folder.
 // Returns a [collections.View] of [Page] based on a [fayl.Path] constructed from its given parts.
-func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string) collections.View[Page] {
+func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string, targetFile *fayl.Path) collections.View[Page] {
 	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
 	var manualsPath *fayl.Path = fayl.PathFrom(appendRoot(documentationPath, manualsFolder))
 	var directory *fayl.Directory = fayl.NewDirectory(manualsPath)
@@ -59,5 +61,5 @@ func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string) colle
 	if except != nil {
 		panic(except)
 	}
-	return pathsToPages(goserialize.SliceToView(directory.Collect()))
+	return pathsToPages(goserialize.SliceToView(directory.Collect()), targetFile)
 }
