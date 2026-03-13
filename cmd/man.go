@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/Polshkrev/gopolutils"
@@ -64,18 +63,12 @@ func writeFiles(write bool, target *fayl.Path, content collections.View[man.Page
 	}
 }
 
-// Append a given parent to its given child.
-// Returns a filepath string constructed of a parent and child path.
-func appendRoot(root *fayl.Path, child string) string {
-	return filepath.Join(root.ToString(), string(filepath.Separator), child)
-}
-
 // Construct the target file based on its name and file type.
 // Retuns a the constructed target file based on its given name and file type.
 func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
-	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
-	var manualsPath *fayl.Path = fayl.PathFrom(appendRoot(documentationPath, manualsFolder))
+	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
+	var manualsPath *fayl.Path = documentationPath.JoinAs(manualsFolder)
 	return fayl.PathFromParts(manualsPath.ToString(), name, fileType).ToString()
 }
 
