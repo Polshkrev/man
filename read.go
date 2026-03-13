@@ -2,7 +2,6 @@ package man
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/Polshkrev/gopolutils"
@@ -26,13 +25,6 @@ func cutNameFromFile(filename, token string) (string, *gopolutils.Exception) {
 	return strip, nil
 }
 
-// Append the a child folder to the root of the filesystem.
-// This needs to be defined due to a bug in the implementation of [fayl.Path.AppendAs]
-// Returns the given child folder to the destination path.
-func appendRoot(root *fayl.Path, child string) string {
-	return filepath.Join(root.ToString(), string(filepath.Separator), child)
-}
-
 // Convert a given [collections.View] of [fayl.Path] into a [collections.View] of [Page].
 // Returns a [collections.View] of [Page] based on a given [collections.View] of [fayl.Path].
 func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) collections.View[Page] {
@@ -54,8 +46,8 @@ func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) 
 // Read the files of a given root path concatenated with the given documentation folder and manuals folder.
 // Returns a [collections.View] of [Page] based on a [fayl.Path] constructed from its given parts.
 func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string, targetFile *fayl.Path) collections.View[Page] {
-	var documentationPath *fayl.Path = fayl.PathFrom(appendRoot(root, documentationFolder))
-	var manualsPath *fayl.Path = fayl.PathFrom(appendRoot(documentationPath, manualsFolder))
+	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
+	var manualsPath *fayl.Path = documentationPath.JoinAs(manualsFolder)
 	var directory *fayl.Directory = fayl.NewDirectory(manualsPath)
 	var except *gopolutils.Exception = directory.Read()
 	if except != nil {
