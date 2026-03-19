@@ -82,12 +82,13 @@ func find(name string, section man.Section, entries collections.View[man.Page]) 
 }
 
 func main() {
-	var write *bool = flag.Bool("write", false, "Write the in-memory cache to a persistant target file. This will only matter if the 'read' flag is set.")
-	var read *bool = flag.Bool("read", false, "Read files into the in-memory cache")
+	var write *bool = flag.Bool("w", false, "Write the in-memory cache to a persistant target file. This will only matter if the 'read' flag is set.")
+	var read *bool = flag.Bool("r", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
 	var section *string = flag.String("s", man.None, "Specify the section from which to lookup.")
 	var all *string = flag.String("a", "", "Display all sections that contain the specified page name.")
+	var list *string = flag.String("l", "", "Display all pages within a specified section.")
 	flag.Parse()
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data collections.View[man.Page] = safe.NewArray[man.Page]()
@@ -97,8 +98,7 @@ func main() {
 	if *size {
 		fmt.Print(data.Size())
 		os.Exit(0)
-	}
-	if len(*all) != 0 {
+	} else if len(*all) != 0 {
 		var pages collections.View[man.Page] = gopolutils.Must(man.FindAllNames(data, *all))
 		var buffer *strings.Builder = &strings.Builder{}
 		var i int
@@ -109,6 +109,13 @@ func main() {
 		}
 		fmt.Println(buffer.String())
 		os.Exit(0)
+	} else if len(*list) != 0 {
+		var pages collections.View[man.Page] = gopolutils.Must(man.FindBySection(data, man.Section(*list)))
+		var i int
+		for i = range pages.Collect() {
+			var page man.Page = pages.Collect()[i]
+			fmt.Println(page.Name)
+		}
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var page man.Page = find(name, man.Section(*section), data)
