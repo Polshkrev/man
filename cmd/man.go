@@ -116,6 +116,7 @@ func main() {
 			var page man.Page = pages.Collect()[i]
 			fmt.Println(page.Name)
 		}
+		os.Exit(0)
 	}
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var page man.Page = find(name, man.Section(*section), data)
