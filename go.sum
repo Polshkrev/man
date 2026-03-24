@@ -1,7 +1,7 @@
 github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
 github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
-github.com/Polshkrev/gopolutils v1.31.0 h1:VaJDuhxcw8QoFBBLdDLKY09CcxyItkRnQSxzTzF8WwE=
-github.com/Polshkrev/gopolutils v1.31.0/go.mod h1:fKokHtSywevqX/6znl44nD6uA5vub/6vEuk3LvArH2Y=
+github.com/Polshkrev/gopolutils v1.35.0 h1:UOTJxFeOnJiCm9Ej/FyIMp2nXvfVPEWDthHNXyWd3Ew=
+github.com/Polshkrev/gopolutils v1.35.0/go.mod h1:fKokHtSywevqX/6znl44nD6uA5vub/6vEuk3LvArH2Y=
 github.com/Polshkrev/goserialize v0.9.1 h1:GFIOtOjw3o+VbrRQeHbVRWB2s8eM1O6F5oLQp6dltLU=
 github.com/Polshkrev/goserialize v0.9.1/go.mod h1:Re27ZCs4+5NVSGEbcr4xdl3yyNmerVOGkQ+rjpRWImk=
 github.com/trimmer-io/go-csv v1.0.0 h1:s1HhtyBDykRk//Nif5zrhLkBaCKNIizYWORnB8C7esE=
