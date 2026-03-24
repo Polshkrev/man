@@ -69,7 +69,7 @@ func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
 	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
 	var manualsPath *fayl.Path = documentationPath.JoinAs(manualsFolder)
-	return fayl.PathFromParts(manualsPath.ToString(), name, fileType).ToString()
+	return fayl.PathFromParts(manualsPath.String(), name, fileType).String()
 }
 
 // Find a [man.Page] from a [collections.View] based on either its given section or its given name.
@@ -86,7 +86,7 @@ func main() {
 	var read *bool = flag.Bool("r", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
-	var section *string = flag.String("s", man.None, "Specify the section from which to lookup.")
+	var section *string = flag.String("s", man.None.String(), "Specify the section from which to lookup.")
 	var all *string = flag.String("a", "", "Display all sections that contain the specified page name.")
 	var list *string = flag.String("l", "", "Display all pages within a specified section.")
 	flag.Parse()
@@ -104,7 +104,7 @@ func main() {
 		var i int
 		for i = range pages.Collect() {
 			var page man.Page = pages.Collect()[i]
-			buffer.WriteString(page.Section)
+			buffer.WriteString(page.Section.String())
 			buffer.WriteString(" ")
 		}
 		fmt.Println(buffer.String())
