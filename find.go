@@ -1,7 +1,6 @@
 package man
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/Polshkrev/gopolutils"
@@ -30,7 +29,7 @@ func concurrentNameSearch(name string, pages collections.View[Page], resultChann
 		return
 	}
 	resultChannel <- *NewPage("", None, "")
-	errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find page with name '%s'.", name))
+	errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, "Can not find page with name '%s'.", name)
 }
 
 // Concurrently seach for a name needle in an [collections.View] haystack.
@@ -48,7 +47,7 @@ func concurrentNamesSearch(name string, pages collections.View[Page], resultChan
 	}
 	if result.IsEmpty() {
 		resultChannel <- nil
-		errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find pages with name '%s'.", name))
+		errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, "Can not find pages with name '%s'.", name)
 		return
 	}
 	resultChannel <- result
@@ -63,14 +62,14 @@ func concurrentSectionSearch(section Section, pages collections.View[Page], resu
 	var i int
 	for i = range pages.Collect() {
 		var page Page = pages.Collect()[i]
-		if section != normalizeNeedle(page.Section) {
+		if normalizeNeedle(section.String()) != normalizeNeedle(page.Section.String()) {
 			continue
 		}
 		result.Append(page)
 	}
 	if result.IsEmpty() {
 		resultChannel <- nil
-		errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, fmt.Sprintf("Can not find pages with section '%s'.", section))
+		errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, "Can not find pages with section '%s'.", section)
 		return
 	}
 	resultChannel <- result

@@ -1,7 +1,6 @@
 package man
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/Polshkrev/gopolutils"
@@ -20,7 +19,7 @@ func cutNameFromFile(filename, token string) (string, *gopolutils.Exception) {
 	var found bool
 	strip, after, found = strings.Cut(lower, token)
 	if !found {
-		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, lower, strip, after, found))
+		return "", gopolutils.NewNamedException(gopolutils.ValueError, "Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, lower, strip, after, found)
 	}
 	return strip, nil
 }
@@ -34,7 +33,7 @@ func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) 
 		var entry *fayl.Entry = entries.Collect()[i]
 		if entry.Is(fayl.DirectoryType) {
 			continue
-		} else if strings.Compare(entry.Path().ToString(), targetFile.ToString()) == 0 {
+		} else if strings.Compare(entry.Path().String(), targetFile.String()) == 0 {
 			continue
 		}
 		var path *fayl.Path = entry.Path()

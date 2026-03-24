@@ -3,7 +3,7 @@ module github.com/Polshkrev/man
 go 1.23.0
 
 require (
-	github.com/Polshkrev/gopolutils v1.31.0
+	github.com/Polshkrev/gopolutils v1.35.0
 	github.com/Polshkrev/goserialize v0.9.1
 )
 

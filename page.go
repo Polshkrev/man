@@ -47,7 +47,7 @@ func normalizeName(name, token string) (string, *gopolutils.Exception) {
 	var found bool
 	strip, after, found = strings.Cut(name, token)
 	if !found {
-		return "", gopolutils.NewNamedException(gopolutils.ValueError, fmt.Sprintf("Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, name, strip, after, found))
+		return "", gopolutils.NewNamedException(gopolutils.ValueError, "Can not find token '%s' in '%s'; Before: %s, After %s, Found %t.", token, name, strip, after, found)
 	}
 	return strip, nil
 }
@@ -56,26 +56,33 @@ func normalizeName(name, token string) (string, *gopolutils.Exception) {
 // Returns the name of the file cut from its given path.
 // If the given path can not be cut, a [gopolutils.ValueError] is returned with an empty string.
 func getNameFromPath(file *fayl.Path) (string, *gopolutils.Exception) {
-	var name string = filepath.Base(file.ToString())
+	var name string = filepath.Base(file.String())
 	return normalizeName(name, "(")
 }
 
 // Obtain the string of the section from the given filename.
 // Returns the string of the section cut from the given filename.
 // If the given filename can not be cut, a [gopolutils.ValueError] is returned.
-func getSection(filename string) (string, *gopolutils.Exception) {
+func getSection(filename string) (Section, *gopolutils.Exception) {
 	var initialCut string
 	var except *gopolutils.Exception
 	initialCut, except = cutNameFromFile(filename, ")")
 	if except != nil {
 		return "", except
 	}
-	return normalizeSection(initialCut, "(")
+	var section string = gopolutils.Must(normalizeSection(initialCut, "("))
+	return Section(section), nil
 }
 
 // Construct a new [Page] from its given [fayl.Path].
 // Returns a new [Page] from its given [fayl.Path].
 // If the [Page] properties can not be cut, the constructor panics.
 func PageFromFile(file *fayl.Path) *Page {
-	return NewPage(gopolutils.Must(getNameFromPath(file)), gopolutils.Must(getSection(file.ToString())), string(gopolutils.Must(fayl.Read(file))))
+	return NewPage(gopolutils.Must(getNameFromPath(file)), gopolutils.Must(getSection(file.String())), string(gopolutils.Must(fayl.Read(file))))
+}
+
+// Represent a manual page as a string.
+// Returns a manual page as a string.
+func (page Page) String() string {
+	return fmt.Sprintf("%s(%s)", page.Name, page.Section)
 }

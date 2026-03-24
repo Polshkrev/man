@@ -3,7 +3,7 @@ package man
 import "github.com/Polshkrev/gopolutils"
 
 // Representation of a section within the linux manual.
-type Section = gopolutils.StringEnum
+type Section gopolutils.StringEnum
 
 const (
 	None                   Section = ""       // Describes a catch-all section.
@@ -25,3 +25,7 @@ const (
 	AdministrationCommands Section = "7"      // Describes overviews, conventions, protocols, character sets, and miscellaneous topics.
 	KernalRoutines         Section = "8"      // Describes system administration and maintenance commands, typically used by the root user or system administrators.
 )
+
+func (section Section) String() string {
+	return string(section)
+}
