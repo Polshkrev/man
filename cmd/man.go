@@ -64,7 +64,7 @@ func writeFiles(write bool, target *fayl.Path, content collections.View[man.Page
 }
 
 // Construct the target file based on its name and file type.
-// Retuns a the constructed target file based on its given name and file type.
+// Returns a the constructed target file based on its given name and file type.
 func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
 	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
@@ -82,7 +82,7 @@ func find(name string, section man.Section, entries collections.View[man.Page]) 
 }
 
 func main() {
-	var write *bool = flag.Bool("w", false, "Write the in-memory cache to a persistant target file. This will only matter if the 'read' flag is set.")
+	var write *bool = flag.Bool("w", false, "Write the in-memory cache to a persistent target file. This will only matter if the 'read' flag is set.")
 	var read *bool = flag.Bool("r", false, "Read files into the in-memory cache")
 	var target *string = flag.String("o", getTargetFile(targetFile, fayl.Json), "Output file to dump the in-memory cache. This will only matter if the 'read' flag is set.")
 	var size *bool = flag.Bool("n", false, "Print the total amount of pages.")
