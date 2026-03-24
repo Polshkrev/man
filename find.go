@@ -14,7 +14,7 @@ func normalizeNeedle(needle string) string {
 	return strings.ToLower(strings.TrimSpace(needle))
 }
 
-// Concurrently seach for a name needle in an [collections.View] haystack.
+// Concurrently search for a name needle in an [collections.View] haystack.
 func concurrentNameSearch(name string, pages collections.View[Page], resultChannel chan<- Page, errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -32,7 +32,7 @@ func concurrentNameSearch(name string, pages collections.View[Page], resultChann
 	errorChannel <- gopolutils.NewNamedException(gopolutils.LookupError, "Can not find page with name '%s'.", name)
 }
 
-// Concurrently seach for a name needle in an [collections.View] haystack.
+// Concurrently search for a name needle in an [collections.View] haystack.
 func concurrentNamesSearch(name string, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -54,7 +54,7 @@ func concurrentNamesSearch(name string, pages collections.View[Page], resultChan
 	errorChannel <- nil
 }
 
-// Concurrently seach for a section needle in an [collections.View] haystack.
+// Concurrently search for a section needle in an [collections.View] haystack.
 func concurrentSectionSearch(section Section, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
