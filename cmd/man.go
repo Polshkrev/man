@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/Polshkrev/gopolutils"
@@ -90,17 +89,19 @@ func main() {
 	var all *string = flag.String("a", "", "Display all sections that contain the specified page name.")
 	var list *string = flag.String("l", "", "Display all pages within a specified section.")
 	flag.Parse()
+
 	var targetPath *fayl.Path = fayl.PathFrom(*target)
 	var data collections.View[man.Page] = safe.NewArray[man.Page]()
 	readFiles(*read, documentationFolder, manualsFolder, targetPath, &data)
 	writeFiles(*write, targetPath, data)
 	data = gopolutils.Must(fayl.ReadList[man.Page](targetPath))
+
 	if *size {
 		fmt.Print(data.Size())
-		os.Exit(0)
+		return
 	} else if len(*all) != 0 {
 		var pages collections.View[man.Page] = gopolutils.Must(man.FindAllNames(data, *all))
-		var buffer *strings.Builder = &strings.Builder{}
+		var buffer *strings.Builder = new(strings.Builder)
 		var i int
 		for i = range pages.Collect() {
 			var page man.Page = pages.Collect()[i]
@@ -108,16 +109,9 @@ func main() {
 			buffer.WriteString(" ")
 		}
 		fmt.Println(buffer.String())
-		os.Exit(0)
-	} else if len(*list) != 0 {
-		var pages collections.View[man.Page] = gopolutils.Must(man.FindBySection(data, man.Section(*list)))
-		var i int
-		for i = range pages.Collect() {
-			var page man.Page = pages.Collect()[i]
-			fmt.Println(page.Name)
-		}
-		os.Exit(0)
+		return
 	}
+
 	var name string = gopolutils.Must(getArgument(0, minimumArgumentCount, maximumArgumentCount, flag.Args()...))
 	var page man.Page = find(name, man.Section(*section), data)
 	fmt.Print(page.Content)
