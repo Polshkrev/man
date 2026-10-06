@@ -12,6 +12,8 @@ import (
 
 // Cut the base from the given file name.
 // If the given base can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name of the title is returned with a nil exception pointer.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func cutNameFromFile(filename, token string) (string, *gopolutils.Exception) {
 	var lower string = strings.ToLower(filename)
 	var strip string
@@ -26,6 +28,8 @@ func cutNameFromFile(filename, token string) (string, *gopolutils.Exception) {
 
 // Convert a given [collections.View] of [fayl.Path] into a [collections.View] of [Page].
 // Returns a [collections.View] of [Page] based on a given [collections.View] of [fayl.Path].
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) collections.View[Page] {
 	var result safe.Collection[Page] = safe.NewArray[Page]()
 	var i int
@@ -44,6 +48,8 @@ func pathsToPages(entries collections.View[*fayl.Entry], targetFile *fayl.Path) 
 
 // Read the files of a given root path concatenated with the given documentation folder and manuals folder.
 // Returns a [collections.View] of [Page] based on a [fayl.Path] constructed from its given parts.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func ReadFiles(root *fayl.Path, documentationFolder, manualsFolder string, targetFile *fayl.Path) collections.View[Page] {
 	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
 	var manualsPath *fayl.Path = documentationPath.JoinAs(manualsFolder)
