@@ -10,11 +10,15 @@ import (
 
 // Normalize a given needle.
 // Returns a lowered and space trimmed string.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func normalizeNeedle(needle string) string {
 	return strings.ToLower(strings.TrimSpace(needle))
 }
 
 // Concurrently search for a name needle in an [collections.View] haystack.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func concurrentNameSearch(name string, pages collections.View[Page], resultChannel chan<- Page, errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -33,6 +37,8 @@ func concurrentNameSearch(name string, pages collections.View[Page], resultChann
 }
 
 // Concurrently search for a name needle in an [collections.View] haystack.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func concurrentNamesSearch(name string, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -55,6 +61,8 @@ func concurrentNamesSearch(name string, pages collections.View[Page], resultChan
 }
 
 // Concurrently search for a section needle in an [collections.View] haystack.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func concurrentSectionSearch(section Section, pages collections.View[Page], resultChannel chan<- collections.View[Page], errorChannel chan<- *gopolutils.Exception) {
 	defer close(resultChannel)
 	defer close(errorChannel)
@@ -79,6 +87,8 @@ func concurrentSectionSearch(section Section, pages collections.View[Page], resu
 // Find a given name in a [collections.View] of [Page].
 // Returns the [Page] containing the given name.
 // If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func FindByName(entries collections.View[Page], name string) (Page, *gopolutils.Exception) {
 	var resultChannel chan Page = make(chan Page, 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
@@ -91,6 +101,8 @@ func FindByName(entries collections.View[Page], name string) (Page, *gopolutils.
 // Find a given section in a [collections.View] of [Page].
 // Returns a [collections.View] of [Page] containing the given [Section].
 // If the given section can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func FindBySection(entries collections.View[Page], section Section) (collections.View[Page], *gopolutils.Exception) {
 	var resultChannel chan collections.View[Page] = make(chan collections.View[Page], 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
@@ -103,6 +115,8 @@ func FindBySection(entries collections.View[Page], section Section) (collections
 // Find a [Page] based on its name from a [collections.View] of [Section].
 // If the given section can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
 // If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty [Page].
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func FindByNameFromSection(entries collections.View[Page], name string, section Section) (Page, *gopolutils.Exception) {
 	var sections collections.View[Page]
 	var except *gopolutils.Exception
@@ -116,6 +130,8 @@ func FindByNameFromSection(entries collections.View[Page], name string, section 
 // Find all [Page] of a given name.
 // Returns a [collections.View] of [Page] containing the given name.
 // If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with a nil data pointer.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func FindAllNames(entries collections.View[Page], name string) (collections.View[Page], *gopolutils.Exception) {
 	var resultChannel chan collections.View[Page] = make(chan collections.View[Page], 1)
 	var exceptChannel chan *gopolutils.Exception = make(chan *gopolutils.Exception, 1)
