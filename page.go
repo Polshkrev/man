@@ -10,6 +10,8 @@ import (
 )
 
 // Representation of a linux manual page with its content and metadata.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 type Page struct {
 	Name    string  `json:"name"`
 	Section Section `json:"section"`
@@ -18,6 +20,8 @@ type Page struct {
 
 // Construct a new [Page] from its given parts.
 // Returns a new [Page] constructed from its given parts.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func NewPage(name string, section Section, content string) *Page {
 	var page *Page = new(Page)
 	page.Name = name
@@ -28,6 +32,8 @@ func NewPage(name string, section Section, content string) *Page {
 
 // Normalize the given name.
 // If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name cut from after the given token is returned with a nil exception pointer.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func normalizeSection(name, token string) (string, *gopolutils.Exception) {
 	var strip string
 	var after string
@@ -41,6 +47,8 @@ func normalizeSection(name, token string) (string, *gopolutils.Exception) {
 
 // Normalize the given name.
 // If the given name can not be cut from the token, a [gopolutils.ValueError] is returned with an empty string, else the name cut from after the given token is returned with a nil exception pointer.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func normalizeName(name, token string) (string, *gopolutils.Exception) {
 	var strip string
 	var after string
@@ -55,6 +63,8 @@ func normalizeName(name, token string) (string, *gopolutils.Exception) {
 // Cut the name of the file from its given [fayl.Path].
 // Returns the name of the file cut from its given path.
 // If the given path can not be cut, a [gopolutils.ValueError] is returned with an empty string.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func getNameFromPath(file *fayl.Path) (string, *gopolutils.Exception) {
 	var name string = filepath.Base(file.String())
 	return normalizeName(name, "(")
@@ -63,6 +73,8 @@ func getNameFromPath(file *fayl.Path) (string, *gopolutils.Exception) {
 // Obtain the string of the section from the given filename.
 // Returns the string of the section cut from the given filename.
 // If the given filename can not be cut, a [gopolutils.ValueError] is returned.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func getSection(filename string) (Section, *gopolutils.Exception) {
 	var initialCut string
 	var except *gopolutils.Exception
@@ -77,12 +89,16 @@ func getSection(filename string) (Section, *gopolutils.Exception) {
 // Construct a new [Page] from its given [fayl.Path].
 // Returns a new [Page] from its given [fayl.Path].
 // If the [Page] properties can not be cut, the constructor panics.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func PageFromFile(file *fayl.Path) *Page {
 	return NewPage(gopolutils.Must(getNameFromPath(file)), gopolutils.Must(getSection(file.String())), string(gopolutils.Must(fayl.Read(file))))
 }
 
 // Represent a manual page as a string.
 // Returns a manual page as a string.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func (page Page) String() string {
 	return fmt.Sprintf("%s(%s)", page.Name, page.Section)
 }
