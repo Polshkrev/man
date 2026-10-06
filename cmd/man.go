@@ -13,15 +13,23 @@ import (
 )
 
 const (
-	documentationFolder  string = "documentation"
-	targetFile           string = "pages"
-	manualsFolder        string = "man"
-	minimumArgumentCount uint8  = 1
-	maximumArgumentCount uint8  = 2
+
+	// Deprecated: Due to a move to c++, this will be deleted.
+	documentationFolder string = "documentation"
+	// Deprecated: Due to a move to c++, this will be deleted.
+	targetFile string = "pages"
+	// Deprecated: Due to a move to c++, this will be deleted.
+	manualsFolder string = "man"
+	// Deprecated: Due to a move to c++, this will be deleted.
+	minimumArgumentCount uint8 = 1
+	// Deprecated: Due to a move to c++, this will be deleted.
+	maximumArgumentCount uint8 = 2
 )
 
 // Obtain the root of the file system.
 // Returns a [fayl.Path] of the root of the file system.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func getRoot() *fayl.Path {
 	var current *fayl.Path = fayl.NewPath()
 	return gopolutils.Must(current.Root())
@@ -31,6 +39,8 @@ func getRoot() *fayl.Path {
 // Returns the argument between the given minimum and maximum values.
 // If the slice of arguments provided have a length less than the given minimum, an [gopolutils.UnderflowError] is returned with an empty string.
 // If the slice of arguments provided have a length more than the given maximum, an [gopolutils.OverflowError] is returned with an empty string.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func getArgument(index, minimum, maximum uint8, args ...string) (string, *gopolutils.Exception) {
 	if len(args) < int(minimum) {
 		return "", gopolutils.NewNamedException(gopolutils.UnderflowError, "Can not provide less than one argument.")
@@ -41,6 +51,8 @@ func getArgument(index, minimum, maximum uint8, args ...string) (string, *gopolu
 }
 
 // Read content into a result parametre from a given path constructed from its root and two isometric children based on a sentinal boolean flag.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func readFiles(read bool, documentationFolder, manualsFolder string, targetFile *fayl.Path, result *collections.View[man.Page]) {
 	if !read {
 		return
@@ -50,6 +62,8 @@ func readFiles(read bool, documentationFolder, manualsFolder string, targetFile 
 }
 
 // Write given content to a given path based on a sentinal boolean flag.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func writeFiles(write bool, target *fayl.Path, content collections.View[man.Page]) {
 	if !write {
 		return
@@ -64,6 +78,8 @@ func writeFiles(write bool, target *fayl.Path, content collections.View[man.Page
 
 // Construct the target file based on its name and file type.
 // Returns a the constructed target file based on its given name and file type.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func getTargetFile(name string, fileType fayl.Suffix) string {
 	var root *fayl.Path = getRoot()
 	var documentationPath *fayl.Path = root.JoinAs(documentationFolder)
@@ -73,6 +89,8 @@ func getTargetFile(name string, fileType fayl.Suffix) string {
 
 // Find a [man.Page] from a [collections.View] based on either its given section or its given name.
 // Returns a [man.Page] containing the given name or given section.
+//
+// Deprecated: Due to a move to c++, this will be deleted.
 func find(name string, section man.Section, entries collections.View[man.Page]) man.Page {
 	if section == man.None {
 		return gopolutils.Must(man.FindByName(entries, name))
@@ -80,6 +98,7 @@ func find(name string, section man.Section, entries collections.View[man.Page]) 
 	return gopolutils.Must(man.FindByNameFromSection(entries, name, section))
 }
 
+// Deprecated: Due to a move to c++, this will be deleted.
 func main() {
 	var write *bool = flag.Bool("w", false, "Write the in-memory cache to a persistent target file. This will only matter if the 'read' flag is set.")
 	var read *bool = flag.Bool("r", false, "Read files into the in-memory cache")
